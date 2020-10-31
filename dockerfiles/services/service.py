@@ -109,7 +109,7 @@ def load_from_db():
         img_stream.seek(0)
 
         return send_file(
-            response=img_stream,
+            img_stream,
             attachment_filename="image.jpeg",
             mimetype="image/jpeg",
         )

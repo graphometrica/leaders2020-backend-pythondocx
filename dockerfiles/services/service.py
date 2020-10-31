@@ -105,7 +105,7 @@ def load_from_db():
         select_expr = select(columns=[images_table.c.image_data], from_obj=images_table, whereclause=images_table.c.image_id==id)
 
         res = session.execute(select_expr).fetchall()
-        img_stream = io.BytesIO(base64.decode(res[0][0]))
+        img_stream = io.BytesIO(base64.b64decode(res[0][0]))
         img_stream.seek(0)
 
         return send_file(

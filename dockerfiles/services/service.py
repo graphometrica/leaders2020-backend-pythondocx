@@ -83,7 +83,7 @@ def save_to_db():
         res = session.execute(insert_query).fetchall()
 
         return app.response_class(
-            response=json.dumps(res[0]),
+            response=json.dumps({"ids": list(res[0])}),
             status=200,
         )
 

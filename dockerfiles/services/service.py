@@ -11,7 +11,7 @@ from impl.animal_card import render_animal_card
 app = flask_app.Flask(__name__)
 
 
-@app.route("/get_animal_card", methods=["GET"])
+@app.route("/get_animal_card", methods=["POST"])
 def get_animal_card():
     try:
         initial_date = request.get_json(force=True)

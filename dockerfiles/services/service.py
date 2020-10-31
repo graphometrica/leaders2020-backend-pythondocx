@@ -74,7 +74,7 @@ def save_to_db():
         buffer = io.BytesIO()
         files = request.files
         images = []
-        for file in files.items():
+        for _, file in files.items():
             Image.open(file).save(buffer, format="JPEG")
             images.append({"image_data": base64.b64encode(buffer.getvalue())})
             buffer.truncate(0)

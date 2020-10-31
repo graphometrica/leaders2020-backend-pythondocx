@@ -81,6 +81,7 @@ def save_to_db():
 
         insert_query = insert(images_table, values=images).returning(images_table.columns.image_id)
         res = session.execute(insert_query).fetchall()
+        session.commit()
 
         return app.response_class(
             response=json.dumps({"ids": list(res[0])}),

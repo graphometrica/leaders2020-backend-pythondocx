@@ -21,13 +21,13 @@ def get_animal_card():
         fname = f"tmp_file_{randint(100, 1000) * randint(50, 500)}.docx"
         doc_file.save(fname)
 
-        #@after_this_request
-        #def try_to_delete(response):
-        #    try:
-        #        os.remove(fname)
-        #    except Exception:
-        #        print("??")
-        #    return response
+        @after_this_request
+        def try_to_delete(response):
+            try:
+                os.remove(fname)
+            except Exception:
+                print("??")
+            return response
 
         return send_file(
             filename_or_fp=Path(__file__).parent.joinpath(fname),

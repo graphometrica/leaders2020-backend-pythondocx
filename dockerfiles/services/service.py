@@ -7,12 +7,27 @@ from flask import abort, after_this_request
 from flask import app as flask_app
 from flask import make_response, request, send_file
 from flask_cors import CORS, cross_origin
+import base64
+import io
+from PIL import Image
+from sqlalchemy import create_engine, insert
+from sqlalchemy.orm.session import sessionmaker
+from sqlalchemy import Table
+from sqlalchemy.schema import MetaData
 
 from impl.animal_card import render_animal_card
 
 app = flask_app.Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
+
+engine = create_engine(
+    "postgresql://graph:graph@23.251.145.120:5432/animal",
+    pool_pre_ping=True,
+)
+session = sessionmaker(bind=engine)
+meta = MetaData(bind=engine)
+images_table = Table("animal_schema.images", meta, autoload=True, autoload_with_engine=engine)
 
 
 @app.route("/get_animal_card", methods=["POST"])
@@ -43,6 +58,33 @@ def get_animal_card():
 
         response.headers["Content-Disposition"] = "attachment; filename=card.docx"
         return response
+
+    except Exception as e:
+        return app.response_class(
+            response=json.dumps(str(e)),
+            status=404,
+        )
+
+
+@app.route("/save_image_to_db", methods=["POST"])
+@cross_origin()
+def save_to_db():
+    try:
+        buffer = io.BytesIO()
+        files = request.files
+        images = []
+        for file in files.items():
+            Image.open(file).save(buffer, format="JPEG")
+            images.append({"image": base64.b64encode(buffer.getvalue())})
+            buffer.truncate(0)
+        insert_query = insert(images_table).values(*images)
+        res = session.connection().execute(insert_query)
+        print(res)
+
+        return app.response_class(
+            response = str(res),
+            status=200,
+        )
 
     except Exception as e:
         return app.response_class(

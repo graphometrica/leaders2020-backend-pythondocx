@@ -16,7 +16,7 @@ def get_animal_card():
     try:
         initial_date = request.get_json(force=True)
         doc_file = render_animal_card(initial_date)
-        fname = f"tmp_file_{randint(100) * randint(100)}.docx"
+        fname = f"tmp_file_{randint(-100, 100) * randint(-100, 100)}.docx"
         doc_file.save(fname)
 
         @after_this_request

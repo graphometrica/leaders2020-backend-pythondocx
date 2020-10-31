@@ -25,7 +25,8 @@ engine = create_engine(
     "postgresql://graph:graph@23.251.145.120:5432/animal",
     pool_pre_ping=True,
 )
-session = sessionmaker(bind=engine)
+session_maker = sessionmaker(bind=engine)
+session = session_maker()
 meta = MetaData(bind=engine, schema="animal_schema")
 images_table = Table("images", meta, autoload=True, autoload_with=engine)
 

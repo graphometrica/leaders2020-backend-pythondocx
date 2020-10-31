@@ -30,7 +30,7 @@ def get_animal_card():
         #    return response
 
         return send_file(
-            filename=Path(__file__).parent.joinpath(fname),
+            filename_or_fp=Path(__file__).parent.joinpath(fname),
             attachment_filename="card.docx",
             mimetype="text/docx",
             as_attachment=True,

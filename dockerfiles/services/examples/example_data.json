@@ -32,7 +32,7 @@
     "catchInfo": {
       "id": "472ea949-c3f9-46fe-a359-115e7dc0d45e",
       "actNumber": "128(1)",
-      "order": {
+      "catchOrder": {
         "id": "111bca96-a46d-4b56-b704-106a5fb11960",
         "orderActNumber": "128(1)",
         "orderActDate": "2020-10-04"
@@ -89,6 +89,20 @@
       }
     },
     "endoparasites": [
+      {
+        "id": "f332f833-d7a3-4632-b4ff-57253ae1e96a",
+        "position": "1",
+        "date": "2020-02-04",
+        "medicationName": "Азинокс",
+        "dose": "2.5 мл"
+      },
+      {
+        "id": "f332f833-d7a3-4632-b4ff-57253ae1e96a",
+        "position": "1",
+        "date": "2020-02-04",
+        "medicationName": "Азинокс",
+        "dose": "2.5 мл"
+      },
       {
         "id": "f332f833-d7a3-4632-b4ff-57253ae1e96a",
         "position": "1",

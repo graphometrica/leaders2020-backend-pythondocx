@@ -7,13 +7,18 @@ from pathlib import Path
 from flask import abort, after_this_request
 from flask import app as flask_app
 from flask import request, send_file
+from flask_cors import CORS, cross_origin
 
 from impl.animal_card import render_animal_card
 
 app = flask_app.Flask(__name__)
+cors = CORS(app)
+app.config["CORS_HEADERS"] = "Content-Type"
+
 
 
 @app.route("/get_animal_card", methods=["POST"])
+@cross_origin()
 def get_animal_card():
     try:
         initial_date = request.get_json(force=True)

@@ -55,17 +55,17 @@ def transform_data(dt: Dict[str, Any]) -> Dict[str, Any]:
         data["sterializationY"] = strlz_date.year - 2000
         data["sterializationD"] = strlz_date.day
 
-    if data["catchInfo"]["order"]["orderActDate"]:
+    if data["catchInfo"]["catchOrder"]["orderActDate"]:
         catchdt = datetime.strptime(
-            data["catchInfo"]["order"]["orderActDate"], "%Y-%m-%d"
+            data["catchInfo"]["catchOrder"]["orderActDate"], "%Y-%m-%d"
         )
-        data["catchInfo"]["order"]["day"] = catchdt.day
-        data["catchInfo"]["order"]["month"] = month_names[catchdt.month - 1]
-        data["catchInfo"]["order"]["year"] = catchdt.year - 2000
+        data["catchInfo"]["catchOrder"]["day"] = catchdt.day
+        data["catchInfo"]["catchOrder"]["month"] = month_names[catchdt.month - 1]
+        data["catchInfo"]["catchOrder"]["year"] = catchdt.year - 2000
     else:
-        data["catchInfo"]["order"]["day"] = "-"
-        data["catchInfo"]["order"]["month"] = "-"
-        data["catchInfo"]["order"]["year"] = "-"
+        data["catchInfo"]["catchOrder"]["day"] = "-"
+        data["catchInfo"]["catchOrder"]["month"] = "-"
+        data["catchInfo"]["catchOrder"]["year"] = "-"
 
     if data["newOwner"]["type"] == "юридическое лицо":
         data["is_phys"] = False
@@ -92,4 +92,44 @@ def transform_data(dt: Dict[str, Any]) -> Dict[str, Any]:
         data["out_act"] = ""
         data["out_type"] = ""
 
+    data["endodata"] = []
+    for i, v in enumerate(data["endoparasites"]):
+        data["endodata"].append(
+            {
+                "id": i + 1,
+                "date": v["date"],
+                "pills": v["medicationName"],
+                "amount": v["dose"],
+            }
+        )
+
+    data["vacdata"] = []
+    for i, v in enumerate(data["vaccinations"]):
+        data["vacdata"].append(
+            {
+                "id": i + 1,
+                "date": v["date"],
+                "pills": v["medicationName"],
+                "amount": v["serialNumber"],
+            }
+        )
+
+    data["healthdata"] = []
+    for i, v in enumerate(data["healthInfo"]):
+        data["healthdata"].append(
+            {
+                "id": i + 1,
+                "date": v["date"],
+                "wight": "-",
+                "pills": v["anamnesis"],
+            }
+        )
+
+
+
     return data
+
+
+if __name__ == "__main__":
+    data = Path(__file__).parent.parent.joinpath("examples").joinpath("example_data.json")
+    render_animal_card(json.loads(data.read_text(encoding="utf8"))).save("rendered.docx")

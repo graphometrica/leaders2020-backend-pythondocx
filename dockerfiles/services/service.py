@@ -1,12 +1,11 @@
 import json
 import os
-from random import randint
-
 from pathlib import Path
+from random import randint
 
 from flask import abort, after_this_request
 from flask import app as flask_app
-from flask import request, send_file
+from flask import make_response, request, send_file
 from flask_cors import CORS, cross_origin
 
 from impl.animal_card import render_animal_card
@@ -14,7 +13,6 @@ from impl.animal_card import render_animal_card
 app = flask_app.Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
-
 
 
 @app.route("/get_animal_card", methods=["POST"])
@@ -34,12 +32,17 @@ def get_animal_card():
                 print("??")
             return response
 
-        return send_file(
-            filename_or_fp=Path(__file__).parent.joinpath(fname),
-            attachment_filename="card.docx",
-            mimetype="text/docx",
-            as_attachment=True,
+        response = make_response(
+            send_file(
+                filename_or_fp=Path(__file__).parent.joinpath(fname),
+                attachment_filename="card.docx",
+                mimetype="application/octet-stream",
+                as_attachment=True,
+            )
         )
+
+        response.headers["Content-Disposition"] = "attachment; filename=card.docx"
+        return response
 
     except Exception as e:
         return app.response_class(

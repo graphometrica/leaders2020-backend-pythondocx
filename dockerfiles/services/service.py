@@ -25,6 +25,7 @@ def get_animal_card():
                 os.remove(fname)
             except Exception:
                 print("??")
+            return response
 
         return send_file(fname, mimetype="text/docx")
     except Exception as e:

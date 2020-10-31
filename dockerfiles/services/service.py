@@ -103,7 +103,7 @@ def load_from_db():
     try:
         buffer = io.BytesIO()
         id = int(request.args.get("id"))
-        select_expr = select(columns=images_table.c.image_data, from_obj=images_table, whereclause=images_table.c.image_id==id)
+        select_expr = select(columns=[images_table.c.image_data], from_obj=images_table, whereclause=images_table.c.image_id==id)
 
         res = session.execure(select_expr).fetchall()
         img_stream = BytesIO(base64.decode(res[0][0]))

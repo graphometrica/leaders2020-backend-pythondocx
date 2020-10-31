@@ -27,7 +27,7 @@ engine = create_engine(
 )
 session = sessionmaker(bind=engine)
 meta = MetaData(bind=engine)
-images_table = Table("animal_schema.images", meta, autoload=True, autoload_with_engine=engine)
+images_table = Table("images", meta, autoload=True, autoload_with=engine)
 
 
 @app.route("/get_animal_card", methods=["POST"])

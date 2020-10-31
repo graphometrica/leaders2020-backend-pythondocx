@@ -30,7 +30,7 @@ month_names = [
 
 def render_animal_card(data: Dict[str, Any]) -> DocxTemplate:
     doc = DocxTemplate(str(template_file.absolute()))
-    doc.render(data)
+    doc.render(transform_data(data))
     return doc
 
 

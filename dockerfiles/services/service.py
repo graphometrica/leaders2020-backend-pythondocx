@@ -19,15 +19,15 @@ def get_animal_card():
         fname = f"tmp_file_{randint(-100, 100) * randint(-100, 100)}.docx"
         doc_file.save(fname)
 
-        #@after_this_request
-        #def try_to_delete(response):
-        #    try:
-        #        os.remove(fname)
-        #    except Exception:
-        #        print("??")
-        #    return response
+        @after_this_request
+        def try_to_delete(response):
+            try:
+                os.remove(fname)
+            except Exception:
+                print("??")
+            return response
 
-        #return send_file(fname, mimetype="text/docx")
+        return send_file(fname, mimetype="text/docx", as_attachment=True)
 
     except Exception as e:
         return app.response_class(

@@ -10,7 +10,7 @@ from flask_cors import CORS, cross_origin
 import base64
 import io
 from PIL import Image
-from sqlalchemy import create_engine, insert
+from sqlalchemy import create_engine, insert, select
 from sqlalchemy.orm.session import sessionmaker, Session
 from sqlalchemy import Table
 from sqlalchemy.schema import MetaData
@@ -79,13 +79,40 @@ def save_to_db():
             images.append({"image_data": base64.b64encode(buffer.getvalue())})
             buffer.truncate(0)
 
-        insert_query = insert(images_table, values=images).returning(images_table.columns.image_id)
+        insert_query = insert(images_table, values=images).returning(
+            images_table.columns.image_id
+        )
         res = session.execute(insert_query).fetchall()
         session.commit()
 
         return app.response_class(
             response=json.dumps({"ids": list(res[0])}),
             status=200,
+        )
+
+    except Exception as e:
+        return app.response_class(
+            response=json.dumps(str(e)),
+            status=404,
+        )
+
+
+@app.route("/load_from_db", methods=["GET"])
+@cross_origin()
+def load_from_db():
+    try:
+        buffer = io.BytesIO()
+        id = int(request.args.get("id"))
+        select_expr = select(columns=images_table.image_data, from_obj=images_table, whereclause=images_table.image_id==id)
+
+        res = session.execure(select_expr).fetchall()
+        img_stream = BytesIO(base64.decode(res[0][0]))
+        img_stream.seek(0)
+
+        return send_file(
+            response=img_stream,
+            attachment_filename="image.jpeg",
+            mimetype="image/jpeg",
         )
 
     except Exception as e:

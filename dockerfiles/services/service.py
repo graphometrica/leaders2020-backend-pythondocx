@@ -79,10 +79,8 @@ def save_to_db():
             images.append({"image_data": base64.b64encode(buffer.getvalue())})
             buffer.truncate(0)
 
-        print(images)
         insert_query = insert(images_table, values=images)
-        res = session.connection().execute(insert_query)
-        print(res)
+        res = session.connection().execute(insert_query).fetchall()
 
         return app.response_class(
             response=str(res),

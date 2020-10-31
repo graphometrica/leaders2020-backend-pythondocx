@@ -11,7 +11,7 @@ import base64
 import io
 from PIL import Image
 from sqlalchemy import create_engine, insert
-from sqlalchemy.orm.session import sessionmaker
+from sqlalchemy.orm.session import sessionmaker, Session
 from sqlalchemy import Table
 from sqlalchemy.schema import MetaData
 
@@ -26,7 +26,7 @@ engine = create_engine(
     pool_pre_ping=True,
 )
 session_maker = sessionmaker(bind=engine)
-session = session_maker()
+session: Session = session_maker()
 meta = MetaData(bind=engine, schema="animal_schema")
 images_table = Table("images", meta, autoload=True, autoload_with=engine)
 
@@ -80,7 +80,8 @@ def save_to_db():
             buffer.truncate(0)
 
         insert_query = insert(images_table, values=images)
-        res = session.connection().execute(insert_query).fetchall()
+        print(images_table.columns)
+        res = session.execute.execute(insert_query).fetchall()
 
         return app.response_class(
             response=str(res),

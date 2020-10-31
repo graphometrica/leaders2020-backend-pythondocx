@@ -29,9 +29,8 @@ def get_animal_card():
         return send_file(fname, mimetype="text/docx")
     except Exception as e:
         app.response_class(
-            responce=json.dumps(str(e)),
+            response=json.dumps(str(e)),
             status=404,
-            mimetype="application/json"
         )
 
 

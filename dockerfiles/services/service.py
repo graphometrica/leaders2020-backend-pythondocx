@@ -2,6 +2,8 @@ import json
 import os
 from random import randint
 
+from pathlib import Path
+
 from flask import abort, after_this_request
 from flask import app as flask_app
 from flask import request, send_file
@@ -16,18 +18,23 @@ def get_animal_card():
     try:
         initial_date = request.get_json(force=True)
         doc_file = render_animal_card(initial_date)
-        fname = f"tmp_file_{randint(-100, 100) * randint(-100, 100)}.docx"
+        fname = f"tmp_file_{randint(100, 1000) * randint(50, 500)}.docx"
         doc_file.save(fname)
 
-        @after_this_request
-        def try_to_delete(response):
-            try:
-                os.remove(fname)
-            except Exception:
-                print("??")
-            return response
+        #@after_this_request
+        #def try_to_delete(response):
+        #    try:
+        #        os.remove(fname)
+        #    except Exception:
+        #        print("??")
+        #    return response
 
-        return send_file(fname, mimetype="text/docx", as_attachment=True)
+        return send_file(
+            filename=Path(__file__).parent.joinpath(fname),
+            attachment_filename="card.docx",
+            mimetype="text/docx",
+            as_attachment=True,
+        )
 
     except Exception as e:
         return app.response_class(

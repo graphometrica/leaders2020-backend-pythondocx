@@ -26,9 +26,13 @@ def get_animal_card():
             except Exception:
                 print("??")
 
-        return send_file(fname)
-    except Exception:
-        abort(404)
+        return send_file(fname, mimetype="text/docx")
+    except Exception as e:
+        app.response_class(
+            responce=json.dumps(e.with_traceback()),
+            status=404,
+            mimetype="application/json"
+        )
 
 
 if __name__ == "__main__":

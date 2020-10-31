@@ -26,7 +26,7 @@ engine = create_engine(
     pool_pre_ping=True,
 )
 session = sessionmaker(bind=engine)
-meta = MetaData(bind=engine)
+meta = MetaData(bind=engine, schema="animal_schema")
 images_table = Table("images", meta, autoload=True, autoload_with=engine)
 
 

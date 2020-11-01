@@ -70,6 +70,7 @@ def get_animal_card():
 @app.route("/save_image_to_db", methods=["POST"])
 @cross_origin()
 def save_to_db():
+    session.rollback()
     try:
         buffer = io.BytesIO()
         files = request.files
